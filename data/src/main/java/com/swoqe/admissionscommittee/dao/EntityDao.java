@@ -1,12 +1,15 @@
 package com.swoqe.admissionscommittee.dao;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import java.util.Optional;
 import java.util.UUID;
 
 public interface EntityDao<T> {
-    List<T> findAll();
+    Page<T> findAll(Pageable pageable);
 
-    T findById(UUID id);
+    Optional<T> findById(UUID id);
 
     T save(T entity);
 

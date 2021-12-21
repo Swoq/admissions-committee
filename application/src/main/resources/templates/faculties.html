@@ -1,0 +1,149 @@
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Catalog</title>
+    <meta charset="utf-8">
+    <link href="https://getbootstrap.com/docs/4.6/examples/blog/" rel="canonical">
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+          integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Playfair&#43;Display:700,900" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" rel="stylesheet"/>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@dashboardcode/bsmultiselect@1.0.0/dist/css/BsMultiSelect.bs4.min.css"
+          rel="stylesheet">
+    <link rel="stylesheet" th:href="@{css/footer.css}">
+    <link rel="stylesheet" th:href="@{css/catalog.css}">
+    <link rel="stylesheet" th:href="@{css/welcome.css}">
+
+</head>
+<body>
+<div class="container">
+
+    <div class="container d-flex flex-column justify-content-center mt-50 mb-50">
+        <form class="mb-0" method="get" th:action="@{/catalog}">
+            <div class="form-row">
+                <div class="col-sm-1 mb-3">
+                    <label for="records">Shown:</label>
+                    <select class="form-control" id="records" th:name="pageSize">
+                        <option selected th:value="${5}">5</option>
+                        <option th:value="${10}">10</option>
+                        <option th:value="${15}">15</option>
+                    </select>
+                </div>
+                <div class="col-sm-3 mb-3">
+                    <label for="sortBy">Sort By:</label>
+                    <select class="form-control" id="sortBy" th:name="sortProperty">
+                        <option selected value="name">Name</option>
+                        <option value="sponsoredSlots">Sponsored Slots</option>
+                        <option value="availableSlots">Available Slots</option>
+                    </select>
+                </div>
+                <div class="col-sm-1 mb-3">
+                    <label for="direction">Direction: </label>
+                    <select class="form-control" id="direction" th:name="sortOrder">
+                        <option selected value="ASC">ASC</option>
+                        <option value="DESC">DESC</option>
+                    </select>
+                </div>
+                <div class="col-sm-1 mb-3 align-text-bottom">
+                    <label for="btnFilterSubmit">-></label>
+                    <input class="btn btn-outline-dark" id="btnFilterSubmit" type="submit" value="Apply">
+                </div>
+            </div>
+            <form method="get" th:action="@{/catalog}">
+                <div class="form-row d-flex justify-content-start">
+                    <div class="input-group justify-content-start ">
+                        <div class="form-outline">
+                            <input class="form-control" id="form1" placeholder="Search by Title" th:name="textSearch"
+                                   type="search"/>
+                        </div>
+                        <button class="btn btn-outline-dark" type="submit">
+                            <i aria-hidden="true" class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </form>
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-body mt-3" th:each="faculty : ${facultiesPage.data}">
+                    <div class="media align-items-center align-items-lg-start text-center text-lg-left flex-column flex-lg-row">
+                        <div class="media-body">
+                            <h6 class="media-title font-weight-semibold">
+                                <a class="h3" data-abc="true"
+                                   th:href="@{/faculty/{id}(id=${faculty.id})}"
+                                   th:text="${faculty.name}">
+                                </a>
+                            </h6>
+                            <ul class="list-inline list-inline-dotted mb-3 mb-lg-2">
+
+                                <li class="list-inline-item">
+                                    <a class="text-muted"
+                                       data-abc="true">Faculty Full Name</a>
+                                </li>
+
+                            </ul>
+                        </div>
+                        <div class="mt-3 mt-lg-2 text-center">
+
+                            <h5 class="mb-0 font-weight-semibold"
+                                th:text="'Available: ' + ${faculty.availableSlots}"></h5>
+                            <h5 class="mb-0 font-weight-semibold"
+                                th:text="'Sponsored: ' + ${faculty.sponsoredSlots}"></h5>
+                        </div>
+                        <a class="btn btn-dark text-white ml-lg-3 mt-lg-3" th:href="@{/faculty/{id}(id=${faculty.id})}"
+                           type="button">
+                            Enroll
+                        </a>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <nav aria-label="Navigation for countries" class="mt-3 d-flex justify-content-center">
+            <ul class="pagination"
+                th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+                <li class="page-item" th:if="${facultiesPage.currentPage != 1}">
+                    <a class="page-link text-dark"
+                       th:href="@{${urlBuilder.replaceQueryParam('page', facultiesPage.currentPage - 1).toUriString()}}">Previous</a>
+                </li>
+
+                <th:block th:each="i : ${#numbers.sequence(1, facultiesPage.totalPages, 1)}">
+                    <li class="page-item active" th:if="${facultiesPage.currentPage == i}">
+                        <a class="page-link bg-dark border-dark" th:text="${i}">
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="page-item" th:if="${facultiesPage.currentPage != i}">
+                        <a class="page-link text-dark"
+                           th:href="@{${urlBuilder.replaceQueryParam('page', i).toUriString()}}"
+                           th:text="${i}">
+                        </a>
+                    </li>
+                </th:block>
+
+                <li class="page-item" th:if="${facultiesPage.currentPage < facultiesPage.totalPages}">
+                    <a class="page-link text-dark"
+                       th:href="@{${urlBuilder.replaceQueryParam('page', facultiesPage.currentPage + 1).toUriString()}}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+</div>
+<div th:replace="fragments/footer :: footer"></div>
+
+<script crossorigin="anonymous" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script crossorigin="anonymous" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script crossorigin="anonymous" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF"
+        src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
+<script crossorigin="anonymous"
+        src="https://cdn.jsdelivr.net/npm/@dashboardcode/bsmultiselect@1.1.18/dist/js/BsMultiSelect.min.js"></script>
+<script th:src="@{js/catalog.js}"></script>
+</body>
+</html>

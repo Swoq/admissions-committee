@@ -2,9 +2,9 @@ package com.swoqe.admissionscommittee.dao.faculty;
 
 import com.swoqe.admissionscommittee.dao.AbstractDao;
 import com.swoqe.admissionscommittee.entity.FacultyEntity;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class FacultyDaoImpl extends AbstractDao<FacultyEntity, FacultyJpaRepository> implements FacultyDao {
 
     public FacultyDaoImpl(FacultyJpaRepository repository) {

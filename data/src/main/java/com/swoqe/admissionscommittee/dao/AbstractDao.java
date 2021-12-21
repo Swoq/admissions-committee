@@ -1,11 +1,13 @@
 package com.swoqe.admissionscommittee.dao;
 
 import com.swoqe.admissionscommittee.entity.BaseSqlEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
-import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public abstract class AbstractDao<T extends BaseSqlEntity, R extends JpaRepository<T, UUID>> {
@@ -16,16 +18,21 @@ public abstract class AbstractDao<T extends BaseSqlEntity, R extends JpaReposito
         this.repository = repository;
     }
 
-    public final List<T> findAll() {
-        return repository.findAll();
+    public Page<T> findAll(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
-    public final T findById(UUID id) {
-        return repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Object id:" + id + " not found"));
+    public Optional<T> findById(UUID id) {
+        if (id == null) {
+            return Optional.empty();
+        }
+        return repository.findById(id);
     }
 
-    @Transactional
     public T save(T object) {
+        if (object == null) {
+            return null;
+        }
         if (object.getId() == null) {
             object.setId(UUID.randomUUID());
         }
@@ -38,16 +45,16 @@ public abstract class AbstractDao<T extends BaseSqlEntity, R extends JpaReposito
 
     @Transactional
     public void delete(T object) {
-        if (object.getId() == null || !repository.existsById(object.getId())) {
-            throw new IllegalArgumentException("Object not found");
+        if (object == null || object.getId() == null) {
+            return;
         }
         repository.delete(object);
     }
 
     @Transactional
     public void deleteById(UUID id) {
-        if (id == null || !repository.existsById(id)) {
-            throw new IllegalArgumentException("Object not found");
+        if (id == null) {
+            return;
         }
         repository.deleteById(id);
     }
