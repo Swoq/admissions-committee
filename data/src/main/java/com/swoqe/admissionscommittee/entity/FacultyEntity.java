@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @Table(name = "faculties")
 @Data
-@ToString(exclude = {"applicants"})
+@ToString(exclude = {"applicants", "finalized"})
 public class FacultyEntity extends BaseSqlEntity {
 
     private String name;
@@ -25,4 +25,7 @@ public class FacultyEntity extends BaseSqlEntity {
             inverseJoinColumns = @JoinColumn(name = "applicant_id", referencedColumnName = "id")
     )
     private List<ApplicantEntity> applicants;
+
+    @OneToOne(mappedBy = "faculty", cascade = CascadeType.REMOVE)
+    private FinalizedFacultyResultEntity finalized;
 }

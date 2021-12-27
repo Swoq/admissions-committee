@@ -1,5 +1,6 @@
 package com.swoqe.admissionscommittee.entity;
 
+import com.swoqe.admissionscommittee.security.SecurityUserDetails;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -14,11 +15,11 @@ import java.util.List;
 @ToString(exclude = {"examsResult", "institution", "certificate", "faculties"})
 public class ApplicantEntity extends PersonEntity {
 
-    @OneToOne(cascade = CascadeType.ALL, optional = false)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "exams_result_id", referencedColumnName = "id")
     private ExamsResultEntity examsResult;
 
-    @OneToOne(cascade = CascadeType.ALL, optional = false)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "certificate_id", referencedColumnName = "id")
     private CertificateEntity certificate;
 
@@ -28,4 +29,7 @@ public class ApplicantEntity extends PersonEntity {
 
     @ManyToMany(mappedBy = "applicants")
     private List<FacultyEntity> faculties;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private SecurityUserDetails securityUser;
 }

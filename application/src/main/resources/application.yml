@@ -7,17 +7,14 @@ spring:
     username: "${SPRING_DATA_SOURCE_USERNAME:postgres}"
     password: "${SPRING_DATA_SOURCE_PASSWORD:postgres}"
     url: "${SPRING_DATA_SOURCE_URL:jdbc:postgresql://localhost:5432/postgres}"
-
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL94Dialect
     hibernate:
-      ddl-auto: "${SPRING_JPA_HIBERNATE_DDL_AUTO:create-drop}"
-
+      ddl-auto: "${SPRING_JPA_HIBERNATE_DDL_AUTO:update}"
   mvc:
     format:
       date-time: iso
 
 #initialization_mode: "${INITIALIZATION_MODE:false}"
-
-#springdoc:
-#  swagger-ui:
-#    path: /swagger-ui
+evaluation:
+  strategy: "${EVALUATION_STRATEGY:averageScore}"

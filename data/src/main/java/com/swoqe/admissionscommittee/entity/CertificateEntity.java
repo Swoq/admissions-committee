@@ -3,6 +3,7 @@ package com.swoqe.admissionscommittee.entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Map;
@@ -14,7 +15,9 @@ import java.util.Map;
 @ToString(exclude = {"examResults", "applicant"})
 public class CertificateEntity extends BaseSqlEntity {
 
-    private String scan;
+    @Lob
+    @Type(type = "org.hibernate.type.ImageType")
+    private byte[] scan;
 
     @ElementCollection
     @CollectionTable(name = "applicant_certificate_subject",

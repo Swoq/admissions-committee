@@ -2,10 +2,13 @@ package com.swoqe.admissionscommittee.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -19,7 +22,8 @@ public abstract class BaseSqlEntity {
     protected UUID id;
 
     @Column(name = ModelConstants.CREATED_TIME_PROPERTY_COLUMN)
-    protected long createdTime;
+    @CreationTimestamp
+    protected LocalDateTime createdTime;
 
     @Override
     public boolean equals(Object o) {
@@ -28,14 +32,14 @@ public abstract class BaseSqlEntity {
 
         BaseSqlEntity that = (BaseSqlEntity) o;
 
-        if (createdTime != that.createdTime) return false;
-        return Objects.equals(id, that.id);
+        if (!Objects.equals(id, that.id)) return false;
+        return Objects.equals(createdTime, that.createdTime);
     }
 
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (int) (createdTime ^ (createdTime >>> 32));
+        result = 31 * result + (createdTime != null ? createdTime.hashCode() : 0);
         return result;
     }
 }

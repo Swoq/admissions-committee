@@ -36,10 +36,6 @@ public abstract class AbstractDao<T extends BaseSqlEntity, R extends JpaReposito
         if (object.getId() == null) {
             object.setId(UUID.randomUUID());
         }
-        if (object.getCreatedTime() == 0) {
-            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-            object.setCreatedTime(timestamp.getTime());
-        }
         return repository.save(object);
     }
 
