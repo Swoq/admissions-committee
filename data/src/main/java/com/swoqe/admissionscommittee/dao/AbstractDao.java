@@ -1,6 +1,7 @@
 package com.swoqe.admissionscommittee.dao;
 
 import com.swoqe.admissionscommittee.entity.BaseSqlEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,6 +11,7 @@ import java.sql.Timestamp;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 public abstract class AbstractDao<T extends BaseSqlEntity, R extends JpaRepository<T, UUID>> {
 
     protected R repository;
@@ -19,14 +21,18 @@ public abstract class AbstractDao<T extends BaseSqlEntity, R extends JpaReposito
     }
 
     public Page<T> findAll(Pageable pageable) {
-        return repository.findAll(pageable);
+        Page<T> all = repository.findAll(pageable);
+        log.debug("DAO | Request to find page, found: {}", all.getSize());
+        return all;
     }
 
     public Optional<T> findById(UUID id) {
         if (id == null) {
             return Optional.empty();
         }
-        return repository.findById(id);
+        Optional<T> byId = repository.findById(id);
+        log.debug("DAO | Request to find by id: {}", byId );
+        return byId;
     }
 
     public T save(T object) {
@@ -36,7 +42,9 @@ public abstract class AbstractDao<T extends BaseSqlEntity, R extends JpaReposito
         if (object.getId() == null) {
             object.setId(UUID.randomUUID());
         }
-        return repository.save(object);
+        T save = repository.save(object);
+        log.debug("DAO | Persisted entity with id: {}", save.getId());
+        return save;
     }
 
     @Transactional
@@ -45,6 +53,7 @@ public abstract class AbstractDao<T extends BaseSqlEntity, R extends JpaReposito
             return;
         }
         repository.delete(object);
+        log.debug("DAO | Request to delete entity with id: {}", object.getId());
     }
 
     @Transactional
@@ -53,6 +62,7 @@ public abstract class AbstractDao<T extends BaseSqlEntity, R extends JpaReposito
             return;
         }
         repository.deleteById(id);
+        log.debug("DAO | Request to delete entity with id: {}", id);
     }
 
 
