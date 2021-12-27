@@ -44,6 +44,7 @@
     </div>
 
     <a th:if="${user.certificate == null}" th:href="@{/certificate}">You don't assign certificate yet</a>
+    <br>
     <a th:if="${user.examsResult == null}" th:href="@{/exams}">You don't assign exams results yet</a>
 
     <div class="row">

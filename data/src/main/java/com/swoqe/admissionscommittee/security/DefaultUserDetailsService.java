@@ -37,6 +37,7 @@ public class DefaultUserDetailsService implements UserDetailsService, AuthServic
 
     @Override
     @Transactional
+    @PreAuthorize("isAnonymous()")
     public void signUpUser(@Valid RegistrationRequest request) {
         ApplicantEntity plainUserEntity = createPlainUserEntity(request);
         InstitutionEntity institutionEntity = institutionRepository.findById(request.getInstitutionId())
@@ -46,6 +47,7 @@ public class DefaultUserDetailsService implements UserDetailsService, AuthServic
     }
 
     @Override
+    @PreAuthorize("hasAnyAuthority('admin:write')")
     public void blockUserByEmail(String email) {
         ApplicantEntity applicant = userRepository.findBySecurityUserEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -54,6 +56,7 @@ public class DefaultUserDetailsService implements UserDetailsService, AuthServic
     }
 
     @Override
+    @PreAuthorize("hasAnyAuthority('admin:write')")
     public void unblockUserByEmail(String email) {
         ApplicantEntity applicant = userRepository.findBySecurityUserEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

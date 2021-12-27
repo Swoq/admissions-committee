@@ -19,7 +19,6 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-@PreAuthorize("isAnonymous()")
 public class RegistrationController {
 
     private final AuthService authService;
